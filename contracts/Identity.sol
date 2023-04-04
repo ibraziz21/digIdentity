@@ -11,7 +11,7 @@ contract Identity {
         bool exists;
     }
 
-    mapping (address => UserDetails) public identities;
+    mapping (address => UserDetails) private identities;
     constructor() {
         
     }
@@ -22,5 +22,13 @@ contract Identity {
         if(identities[msg.sender].exists) revert alreadyCreated();
         identities[msg.sender] = UserDetails(_proof, true);
     }
+    //to verify identity, the msg.sender has to input the same proof as stored
+    function verifyIdentity(bytes32 _proof) public view returns (bool) {
+        if(identities[msg.sender].proof != _proof) revert UnableToVerify();
+        return true;
+    }
+
+    //Access control using the identity
+    
 
 }
